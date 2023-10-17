@@ -12,7 +12,7 @@ function App() {
 
         const fetchCSV = async () => {
             try {
-                const response = await fetch('./greenhouse-gas-emissions-industry-and-household-december-2022-quarter.csv');
+                const response = await fetch('./sample.csv');
                 const text = await response.text();
                 console.log(text)
                 const json = await handleCSVToJSON(text);
@@ -88,7 +88,7 @@ function App() {
                 <h1>Loading...</h1>
             ) : (
                 <>
-                    <h1 className="text-2xl font-bold mb-3">CSV Data Parser</h1>
+                    <h1 className="text-2xl font-bold mb-3">Fetch, Parse & Display CSV Data</h1>
 
                     <table className="border-collapse w-full">
                         <thead className="text-left">
