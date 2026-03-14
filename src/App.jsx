@@ -96,7 +96,7 @@ function App() {
             {loading ? (
                 <h1>Loading...</h1>
             ) : (
-                <>
+                <div className="p-5">
                     <h1 className="text-2xl font-bold mb-3">Fetch, Parse & Display CSV Data</h1>
 
                     <table className="border-collapse w-full">
@@ -117,7 +117,7 @@ function App() {
                             ))}
                         </tbody>
                     </table>
-                </>
+                </div>
             )}
         </div>
     );
