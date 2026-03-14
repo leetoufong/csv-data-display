@@ -100,16 +100,16 @@ function App() {
             // Create a new FileReader instance
             const reader = new FileReader();
 
+            // Read the file as text
+            // You can use other methods like readAsDataURL for images/other files
+            reader.readAsText(file);
+
             // Define the onload callback function
             reader.onload = (e) => {
                 // The file contents are in e.target.result
                 const contents = e.target.result;
-                console.log("File contents:", contents);
+                setData( handleCSVToJSON( contents ) )
             };
-
-            // Read the file as text
-            // You can use other methods like readAsDataURL for images/other files
-            reader.readAsText(file);
         }
     };
 
