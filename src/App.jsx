@@ -14,19 +14,9 @@ function App() {
             try {
                 const response = await fetch('./sample.csv');
                 const text = await response.text();
-                // console.log(text)
                 const json = await handleCSVToJSON(text);
 
                 setData(json);
-                const newHeadings = [];
-
-                for (let key in json[0]) {
-                    if (newHeadings.indexOf(key) < 0) {
-                        newHeadings.push(key)
-                    }
-                }
-
-                setHeadings(newHeadings);
             }
             catch(error) {
                 // handle errors
@@ -50,6 +40,8 @@ function App() {
         }
 
         titles = titles.split(delimiter);
+
+        setHeadings(titles);
 
         return data
             .slice(data.indexOf('\n') + 1)
@@ -107,8 +99,9 @@ function App() {
             // Define the onload callback function
             reader.onload = (e) => {
                 // The file contents are in e.target.result
-                const contents = e.target.result;
-                setData( handleCSVToJSON( contents ) )
+                const contents = handleCSVToJSON(e.target.result);
+                console.log(contents)
+                setData( contents )
             };
         }
     };
@@ -129,7 +122,6 @@ function App() {
                             type="file"
                             accept=".csv, text/csv"
                             onChange={(event) => {
-                                // const csvToJsonText = handleCSVToJSON(event.target.files[0])
                                 handleFileChange(event)
                             }}
                         />
