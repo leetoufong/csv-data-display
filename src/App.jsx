@@ -10,10 +10,11 @@ function App() {
     useEffect(() => {
         setLoading(true);
 
-        const fetchCSV = async () => {
+        const fetchSampleCSV = async () => {
             try {
                 const response = await fetch('./sample.csv');
                 const text = await response.text();
+                // console.log(text)
                 const json = await handleCSVToJSON(text);
 
                 setData(json);
@@ -35,7 +36,7 @@ function App() {
             }
         };
 
-        fetchCSV();
+        fetchSampleCSV();
     }, []);
 
     const handleCSVToJSON = (data) => {
@@ -91,6 +92,27 @@ function App() {
         setData(newUserList);
     };
 
+    const handleFileChange = (event) => {
+        // Get the first file from the FileList
+        const file = event.target.files[0];
+
+        if (file) {
+            // Create a new FileReader instance
+            const reader = new FileReader();
+
+            // Define the onload callback function
+            reader.onload = (e) => {
+                // The file contents are in e.target.result
+                const contents = e.target.result;
+                console.log("File contents:", contents);
+            };
+
+            // Read the file as text
+            // You can use other methods like readAsDataURL for images/other files
+            reader.readAsText(file);
+        }
+    };
+
     return (
         <div className="App">
             {loading ? (
@@ -98,6 +120,20 @@ function App() {
             ) : (
                 <div className="p-5">
                     <h1 className="text-2xl font-bold mb-3">Fetch, Parse & Display CSV Data</h1>
+                    
+                    <div className="mb-5">
+                        <label htmlFor="upload" className="mr-3">Upload a <code>.CSV</code> file:</label>
+                        <input
+                            id="upload"
+                            className="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                            type="file"
+                            accept=".csv, text/csv"
+                            onChange={(event) => {
+                                // const csvToJsonText = handleCSVToJSON(event.target.files[0])
+                                handleFileChange(event)
+                            }}
+                        />
+                    </div>
 
                     <table className="border-collapse w-full">
                         <thead className="text-left">
