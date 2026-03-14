@@ -27,51 +27,6 @@ function App() {
         fetchSampleCSV();
     }, []);
 
-    // const handleCSVToJSON = (data) => {
-    //     let titles = data.slice(0, data.indexOf('\n'));
-    //     let delimiter;
-
-    //     if (titles.indexOf(',') >= 0) {
-    //         delimiter = ',';
-    //     } else {
-    //         delimiter = /[ ]+/;
-    //     }
-
-    //     titles = titles.split(delimiter);
-
-    //     setHeadings(titles);
-
-    //     return data
-    //         .slice(data.indexOf('\n') + 1)
-    //         .split('\n')
-    //         .map(v => {
-    //             const values = v.split(delimiter);
-    //             return titles.reduce(
-    //                 (obj, title, index) => ((obj[title] = values[index]), obj), {}
-    //             );
-    //         });
-    // };
-
-    const handleCSVToJSON = (data) => {
-        const lines = data.split('\n');
-        const headers = lines[0].split(',');
-        const result = [];
-
-        for (let i = 1; i < lines.length; i++) {
-            const obj = {};
-            const currentline = lines[i].split(',');
-
-            for (let j = 0; j < headers.length; j++) {
-                obj[headers[j]] = currentline[j];
-            }
-
-            result.push(obj);
-        }
-
-        setHeadings(headers)
-        setData(result)
-    };
-
     const handleSort = (type) => {
         const newUserList = data;
 
@@ -122,6 +77,26 @@ function App() {
         }
     };
 
+    const handleCSVToJSON = (data) => {
+        const lines = data.split('\n');
+        const headers = lines[0].split(',');
+        const result = [];
+
+        for (let i = 1; i < lines.length; i++) {
+            const obj = {};
+            const currentline = lines[i].split(',');
+
+            for (let j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j];
+            }
+
+            result.push(obj);
+        }
+
+        setHeadings(headers)
+        setData(result)
+    };
+
     return (
         <div className="App">
             {loading ? (
@@ -152,13 +127,16 @@ function App() {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((item, i) => (
-                                <tr className="hover:bg-slate-100" key={i}>
-                                    {Object.keys(item).map((datum, j) => (
-                                        <td className="border p-2" key={j}>{item[datum]}</td>
-                                    ))}
-                                </tr>
-                            ))}
+                            {data.map((item, i) => {
+                                console.log(item)
+                                return (
+                                    <tr className="hover:bg-slate-100" key={i}>
+                                        {Object.keys(item).map((datum, j) => (
+                                            <td className="border p-2" key={j}>{item[datum]}</td>
+                                        ))}
+                                    </tr>
+                                )
+                            } )}
                         </tbody>
                     </table>
                 </div>
