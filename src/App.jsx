@@ -15,8 +15,6 @@ function App() {
                 const response = await fetch('./sample.csv');
                 const text = await response.text();
                 const json = await handleCSVToJSON(text);
-
-                setData(json);
             }
             catch(error) {
                 // handle errors
@@ -29,29 +27,49 @@ function App() {
         fetchSampleCSV();
     }, []);
 
-    const handleCSVToJSON = (data) => {
-        let titles = data.slice(0, data.indexOf('\n'));
-        let delimiter;
+    // const handleCSVToJSON = (data) => {
+    //     let titles = data.slice(0, data.indexOf('\n'));
+    //     let delimiter;
 
-        if (titles.indexOf(',') >= 0) {
-            delimiter = ',';
-        } else {
-            delimiter = /[ ]+/;
+    //     if (titles.indexOf(',') >= 0) {
+    //         delimiter = ',';
+    //     } else {
+    //         delimiter = /[ ]+/;
+    //     }
+
+    //     titles = titles.split(delimiter);
+
+    //     setHeadings(titles);
+
+    //     return data
+    //         .slice(data.indexOf('\n') + 1)
+    //         .split('\n')
+    //         .map(v => {
+    //             const values = v.split(delimiter);
+    //             return titles.reduce(
+    //                 (obj, title, index) => ((obj[title] = values[index]), obj), {}
+    //             );
+    //         });
+    // };
+
+    const handleCSVToJSON = (data) => {
+        const lines = data.split('\n');
+        const headers = lines[0].split(',');
+        const result = [];
+
+        for (let i = 1; i < lines.length; i++) {
+            const obj = {};
+            const currentline = lines[i].split(',');
+
+            for (let j = 0; j < headers.length; j++) {
+                obj[headers[j]] = currentline[j];
+            }
+
+            result.push(obj);
         }
 
-        titles = titles.split(delimiter);
-
-        setHeadings(titles);
-
-        return data
-            .slice(data.indexOf('\n') + 1)
-            .split('\n')
-            .map(v => {
-                const values = v.split(delimiter);
-                return titles.reduce(
-                    (obj, title, index) => ((obj[title] = values[index]), obj), {}
-                );
-            });
+        setHeadings(headers)
+        setData(result)
     };
 
     const handleSort = (type) => {
@@ -92,17 +110,15 @@ function App() {
             // Create a new FileReader instance
             const reader = new FileReader();
 
-            // Read the file as text
-            // You can use other methods like readAsDataURL for images/other files
-            reader.readAsText(file);
-
             // Define the onload callback function
             reader.onload = (e) => {
                 // The file contents are in e.target.result
-                const contents = handleCSVToJSON(e.target.result);
-                console.log(contents)
-                setData( contents )
+                handleCSVToJSON(e.target.result);
             };
+
+            // Read the file as text
+            // You can use other methods like readAsDataURL for images/other files
+            reader.readAsText(file);
         }
     };
 
