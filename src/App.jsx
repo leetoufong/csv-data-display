@@ -114,6 +114,8 @@ function App() {
                         />
                     </div>
 
+                    <code className="max-h-[200px] overflow-y-scroll mb-10 p-5 block bg-gray-200">{JSON.stringify(data, null, 2)}</code>
+
                     <table className="border-collapse w-full">
                         <thead className="text-left">
                             <tr>
