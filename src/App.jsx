@@ -10,11 +10,11 @@ function App() {
     useEffect(() => {
         setLoading(true);
 
-        const fetchSampleCSV = async () => {
+        const fetchCSV = async () => {
             try {
                 const response = await fetch('./sample.csv');
                 const text = await response.text();
-                const json = await handleCSVToJSON(text);
+                const json = await convertCSVtoJSON(text);
             }
             catch(error) {
                 // handle errors
@@ -24,7 +24,7 @@ function App() {
             }
         };
 
-        fetchSampleCSV();
+        fetchCSV();
     }, []);
 
     const handleSort = (type) => {
@@ -57,18 +57,14 @@ function App() {
         setData(newUserList);
     };
 
-    const handleFileChange = (event) => {
-        // Get the first file from the FileList
+    const fileChange = (event) => {
         const file = event.target.files[0];
 
         if (file) {
-            // Create a new FileReader instance
             const reader = new FileReader();
 
-            // Define the onload callback function
             reader.onload = (e) => {
-                // The file contents are in e.target.result
-                handleCSVToJSON(e.target.result);
+                convertCSVtoJSON(e.target.result);
             };
 
             // Read the file as text
@@ -77,7 +73,7 @@ function App() {
         }
     };
 
-    const handleCSVToJSON = (data) => {
+    const convertCSVtoJSON = (data) => {
         const lines = data.split('\n');
         const headers = lines[0].split(',');
         const result = [];
@@ -113,7 +109,7 @@ function App() {
                             type="file"
                             accept=".csv, text/csv"
                             onChange={(event) => {
-                                handleFileChange(event)
+                                fileChange(event)
                             }}
                         />
                     </div>
@@ -128,7 +124,6 @@ function App() {
                         </thead>
                         <tbody>
                             {data.map((item, i) => {
-                                console.log(item)
                                 return (
                                     <tr className="hover:bg-slate-100" key={i}>
                                         {Object.keys(item).map((datum, j) => (
